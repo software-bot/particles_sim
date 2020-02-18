@@ -91,13 +91,8 @@ public class PlayState implements GestureDetector.GestureListener {
             int y1 = r.nextInt(y, yTo);
             Particle p = particlePool.obtain();
             p.setCenter(new Vector2(x1, y1));
-//            float g = (float) Math.abs(r.nextGaussian() / 5);
-//            if (g < 0.1f) {
-//                g = 0.1f;
-//            }
             p.setVelocity(p.getCenter().cpy().nor().scl(-0.1f));
             p.getVelocity().rotate(rotation);
-            p.setRotation(r.nextFloat() * 5);
             particles.add(p);
         }
     }
@@ -116,7 +111,7 @@ public class PlayState implements GestureDetector.GestureListener {
     }
 
     private void updateAndDrawObjects() {
-        float delta = Gdx.graphics.getDeltaTime() * 400;
+        float delta = Gdx.graphics.getDeltaTime() * 500;
         updateAndDrawParticles(delta);
         updateAndDrawBigObjects(delta);
     }
