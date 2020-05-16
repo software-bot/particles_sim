@@ -1,8 +1,7 @@
-package com.krystian.mass;
+package fun.particles.factory;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Map;
 import fun.particles.base.AbstractFactory;
 import fun.particles.base.GravitationalObject;
 import fun.particles.custom.Particle;
-import fun.particles.custom.Sun;
+import fun.particles.custom.Rock;
 
 public class ObjectFactory implements AbstractFactory<GravitationalObject> {
     private Map<Class<? extends GravitationalObject>, Texture> textureMap;
@@ -25,8 +24,8 @@ public class ObjectFactory implements AbstractFactory<GravitationalObject> {
     private void initTextures() {
         textureMap = new HashMap<>();
         List<GravitationalObject> loader = new ArrayList<>();
-        loader.add(new Sun());
         loader.add(new Particle());
+        loader.add(new Rock());
         for (GravitationalObject implClass : loader) {
             if (implClass.texturePath() != null)
                 textureMap.put(implClass.getClass(), new Texture(implClass.texturePath()));

@@ -6,15 +6,14 @@ import com.badlogic.gdx.math.Vector2;
 
 import fun.particles.base.GravitationalObject;
 
-public class Particle extends GravitationalObject {
+public class Rock extends GravitationalObject {
     private Color color;
-    public static int mass = 200;
 
-    public Particle() {
-        this(new Vector2(0, 0), new Vector2(0, 0), mass);
+    public Rock() {
+        this(new Vector2(0, 0), new Vector2(0, 0), 15);
     }
 
-    private Particle(Vector2 center, Vector2 velocity, float mass) {
+    private Rock(Vector2 center, Vector2 velocity, float mass) {
         super(center, velocity, mass);
         color = new Color(1, 1, 1, 1);
     }
@@ -28,12 +27,12 @@ public class Particle extends GravitationalObject {
 
     @Override
     public String texturePath() {
-        return "dot.png";
+        return "dot2.png";
     }
 
 
     private void changeColorBasedOnVelocity() {
-        float speed = getVelocity().len() * 1.8f;
+        float speed = getVelocity().len();
         color.b = colorValReverse(0.8f - speed);
         color.g = colorVal(speed);
         color.r = colorVal((speed * 2));

@@ -1,14 +1,13 @@
 package fun.particles.helper;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
-
-import java.util.List;
 
 import fun.particles.base.Mass;
-import fun.particles.custom.Particle;
+
+import static fun.particles.base.Const.energyLost;
 
 public class CollisionHelper {
+    static Vector2 helper = new Vector2(energyLost, energyLost);
 
     private CollisionHelper() {
         throw new UnsupportedOperationException("Utility class");
@@ -27,14 +26,23 @@ public class CollisionHelper {
         top = ((2 * m1.getMass()) / massSum) * t1.dot(t2);
         u = (float) (top / Math.pow(bot, 2));
         Vector2 m2v = m2.getVelocity().cpy().sub(t2.cpy().scl(u));
+        m1v.scl(1f - energyLost);
+        m2v.scl(1f - energyLost);
         m2.setVelocity(m2v);
         m1.setVelocity(m1v);
+        adjustCenter(m1, m2);
+
     }
 
-    public static void destroy(Mass[] toDestroy, Pool<Particle> particlePool, List<Particle> particles) {
-        for (Mass m : toDestroy) {
-            if (m != null) {
-                m.destroyToParticles(particlePool, particles);
+    private static void adjustCenter(Mass m1, Mass m2) {
+        float offset = m1.getCenter().dst(m2.getCenter());
+        if (offset < 0.5f) {
+            float v1l = m1.getVelocity().len();
+            float v2l = m2.getVelocity().len();
+            if (v1l < v2l) {
+                m1.getCenter().add(m1.getVelocity().cpy().nor().scl(offset));
+            } else {
+                m2.getCenter().add(m2.getVelocity().cpy().nor().scl(offset));
             }
         }
     }

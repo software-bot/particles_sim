@@ -2,28 +2,21 @@ package fun.particles.base;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
 
-import java.util.List;
-
-import fun.particles.custom.Particle;
-
-import static fun.particles.base.Const.G;
+import static fun.particles.base.Const.lost;
 
 public abstract class Mass {
 
     private Vector2 center;
     private Vector2 velocity;
-    private float radius;
-    private float mass;
-    private float force;
-    private float radiusOffset;
+    private float radius, mass, radiusOffset;
+    public int host;
+    public int id;
 
     protected Mass(Vector2 center, Vector2 velocity, float mass) {
         this.center = center;
         this.velocity = velocity;
         this.mass = mass;
-        this.force = mass * G;
     }
 
     public void update(float dt) {
@@ -31,14 +24,10 @@ public abstract class Mass {
     }
 
     public boolean isMassIntersecting(Mass otherMass) {
-        return getCenter().dst(otherMass.getCenter()) + radiusOffset + otherMass.radiusOffset <= getRadius() + otherMass.getRadius();
+        return host != otherMass.host && getCenter().dst(otherMass.getCenter()) <= getRadius() + otherMass.getRadius();
     }
 
     public abstract void draw(SpriteBatch spriteBatch);
-
-    abstract public void destroyToParticles(Pool<Particle> particlePool, List<Particle> particles);
-
-    abstract public void updateVelocityByGravity(Mass mass, float delta);
 
     public Vector2 getCenter() {
         return center;
@@ -46,6 +35,7 @@ public abstract class Mass {
 
     public void setCenter(Vector2 center) {
         this.center = center;
+        this.id = getId();
     }
 
     public Vector2 getVelocity() {
@@ -90,8 +80,12 @@ public abstract class Mass {
         this.mass = mass;
     }
 
-    public float getForce() {
-        return force;
+    public int getId() {
+        return id((int) center.x, (int) center.y);
+    }
+
+    public static int id(int x, int y) {
+        return ((x >> 3) * 100) + (y >> 2);
     }
 }
 
